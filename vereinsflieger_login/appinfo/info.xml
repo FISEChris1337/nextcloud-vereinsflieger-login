@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<info xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
+  <id>vereinsflieger_login</id>
+  <name>Vereinsflieger Login</name>
+  <summary>Vereinsflieger login and club roles for Nextcloud</summary>
+  <summary lang="de">Vereinsflieger-Anmeldung und Vereinsrollen für Nextcloud</summary>
+  <description>Vereinsflieger Login lets members of your club sign in to Nextcloud using their Vereinsflieger credentials.
+
+- SSO through Vereinsflieger: sign-in for members of the configured club.
+- Roles and groups: received Vereinsflieger roles are stored and can be mapped to Nextcloud groups in the admin settings.
+- Existing account migration: optionally link existing local member accounts to SSO through a unique email match on their first successful login. This option is disabled by default.
+- Automatic member provisioning: optionally create new Nextcloud accounts on first successful login with first name, last name and email.
+- Stable account linking: the Vereinsflieger ID keeps accounts linked after email changes.
+- Nextcloud features: native sessions, Remember me, Nextcloud two-factor authentication and app passwords.
+- Local emergency accounts: selected accounts remain available for local login; SSO-linked accounts are protected against local account password login.
+- Central administration: German and English admin settings with group mapping, API usage, configurable login pauses and unlock controls.
+
+Independent community integration. Not an official Vereinsflieger product.</description>
+  <description lang="de">Vereinsflieger Login ermöglicht Mitgliedern deines Vereins die Anmeldung an Nextcloud mit ihren Vereinsflieger-Zugangsdaten.
+
+- SSO über Vereinsflieger: Anmeldung für Mitglieder des konfigurierten Vereins.
+- Rollen und Gruppen: Empfangene Vereinsflieger-Rollen werden gespeichert und können im Adminbereich Nextcloud-Gruppen zugeordnet werden.
+- Migration bestehender Konten: Vorhandene lokale Mitgliedskonten lassen sich beim ersten erfolgreichen Login über eine eindeutige E-Mail-Zuordnung automatisch mit SSO verknüpfen. Diese Option ist standardmäßig ausgeschaltet.
+- Automatische Mitgliederanlage: Neue Nextcloud-Konten können beim ersten erfolgreichen Login mit Vorname, Nachname und E-Mail angelegt werden.
+- Dauerhafte Kontoverknüpfung: Die Vereinsflieger-ID verbindet beide Konten auch bei späteren E-Mail-Änderungen.
+- Nextcloud-Komfort: Native Sitzungen, „Angemeldet bleiben“, Nextcloud-Zwei-Faktor-Authentifizierung und App-Passwörter.
+- Lokale Notfallkonten: Ausgewählte Konten bleiben lokal nutzbar; SSO-verknüpfte Konten sind gegen lokale Passwortanmeldung geschützt.
+- Zentrale Verwaltung: Deutsche und englische Adminoberfläche mit Gruppenmapping, API-Verbrauch, konfigurierbaren Anmeldesperren und Entsperrfunktion.
+
+Unabhängige Community-Integration. Kein offizielles Vereinsflieger-Produkt.</description>
+  <version>0.6.5</version>
+  <licence>agpl</licence>
+  <author>Vereinsflieger Login contributors</author>
+  <namespace>VereinsfliegerLogin</namespace>
+  <category>security</category>
+  <bugs>https://github.com/FISEChris1337/nextcloud-vereinsflieger-login/issues</bugs>
+  <repository type="git">https://github.com/FISEChris1337/nextcloud-vereinsflieger-login</repository>
+  <dependencies><php min-version="8.3"/><nextcloud min-version="33" max-version="35"/></dependencies>
+  <settings><admin>OCA\VereinsfliegerLogin\Settings\Admin</admin><admin-section>OCA\VereinsfliegerLogin\Settings\Section</admin-section></settings>
+</info>

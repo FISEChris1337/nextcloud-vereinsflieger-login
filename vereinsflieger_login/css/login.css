@@ -1,0 +1,159 @@
+/* SPDX-License-Identifier: AGPL-3.0-or-later */
+/* SPDX-FileCopyrightText: 2019 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-FileCopyrightText: 2026 Vereinsflieger Login contributors */
+/* Layout dimensions follow Nextcloud's Login.vue and LoginForm.vue (v33.0.9).
+ * Guest-box colors, background, padding and theming are supplied by Nextcloud.
+ * See THIRD_PARTY_NOTICES.md for upstream attribution. */
+.vf-login {
+    box-sizing: border-box;
+    width: 320px;
+    max-width: calc(100vw - 32px);
+    text-align: start;
+    font-size: 1rem;
+}
+.vf-login h2 {
+    text-align: center;
+    overflow-wrap: anywhere;
+}
+.vf-login form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin: 0;
+}
+.vf-field {
+    position: relative;
+    margin-top: 4px;
+}
+.vf-login .vf-field input {
+    box-sizing: border-box;
+    width: 100%;
+    height: calc(var(--default-clickable-area, 44px) + 4px);
+    margin: 0;
+    padding: 8px 12px;
+    color: var(--color-main-text);
+    border: 2px solid var(--color-border-maxcontrast);
+    border-radius: var(--border-radius-element);
+    background: var(--color-main-background);
+    font-size: inherit;
+}
+.vf-field label {
+    position: absolute;
+    inset-inline-start: 12px;
+    top: 10px;
+    max-width: calc(100% - 24px);
+    padding: 0 4px;
+    color: var(--color-text-maxcontrast);
+    cursor: text;
+    pointer-events: none;
+    transition:
+        top 0.1s,
+        font-size 0.1s;
+}
+.vf-field input:focus + label,
+.vf-field input:not(:placeholder-shown) + label {
+    top: -10px;
+    font-size: 12px;
+    background: var(--color-main-background);
+}
+.vf-field input:focus {
+    border-color: var(--color-primary-element);
+    outline: none;
+}
+.vf-login .vf-password input {
+    padding-inline-end: 44px;
+}
+.vf-login #vf-password-toggle {
+    position: absolute;
+    inset-inline-end: 2px;
+    top: 0;
+    width: 44px;
+    height: calc(var(--default-clickable-area, 44px) + 4px);
+    padding: 12px;
+    margin: 0;
+    border: 0;
+    background: transparent;
+}
+.vf-login #vf-password-toggle[hidden] {
+    display: none;
+}
+.vf-eye {
+    display: block;
+    width: 16px;
+    height: 10px;
+    border: 2px solid currentColor;
+    border-radius: 70% 20%;
+    transform: rotate(45deg);
+}
+.vf-eye::after {
+    content: "";
+    display: block;
+    width: 4px;
+    height: 4px;
+    margin: 1px auto;
+    background: currentColor;
+    border-radius: 50%;
+}
+.vf-remember {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: var(--default-clickable-area, 44px);
+    margin: 0;
+    cursor: pointer;
+}
+.vf-login .vf-remember input {
+    appearance: auto;
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    accent-color: var(--color-primary-element);
+}
+.vf-login .vf-submit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    min-height: var(--default-clickable-area, 44px);
+    margin: 8px 0 0;
+    background: var(--color-primary-element);
+    color: var(--color-primary-element-text);
+    border-radius: var(--border-radius-element);
+    font-size: inherit;
+}
+.vf-arrow {
+    font-size: 24px;
+    font-weight: normal;
+    line-height: 1;
+}
+.vf-submit:disabled {
+    opacity: 0.7;
+    cursor: wait;
+}
+.vf-login .vf-local-login {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: var(--default-clickable-area, 44px);
+    margin: 12px 0 0;
+    padding: 8px;
+    box-sizing: border-box;
+    text-align: center;
+    border: 2px solid var(--color-border);
+    border-radius: var(--border-radius-element);
+    background: var(--color-main-background);
+    color: var(--color-main-text);
+}
+.vf-login-message {
+    margin-bottom: 12px;
+    padding: 12px;
+    border-inline-start: 4px solid var(--color-error);
+    border-radius: var(--border-radius);
+    background: var(--color-error-light);
+}
+.vf-login button:focus-visible,
+.vf-local-login:focus-visible {
+    outline: 2px solid var(--color-primary-element);
+    outline-offset: 2px;
+}

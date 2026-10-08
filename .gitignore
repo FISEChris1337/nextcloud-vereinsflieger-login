@@ -1,0 +1,14 @@
+/dist/
+/vendor/
+/.idea/
+/.vscode/
+*.local.*
+*.log
+*.pem
+*.key
+.env*
+/node_modules/
+/.php-cs-fixer.cache
+/admin-preview*
+/ADMIN_UI_VORSCHAU*
+/runtime-results/
