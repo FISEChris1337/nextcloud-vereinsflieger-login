@@ -28,7 +28,7 @@ final class Admin implements ISettings
             }
         }
         $usage = $this->settings->hasKey() ? $this->guard->usage($this->settings->key()) : ['dateUtc' => gmdate('Y-m-d'), 'used' => 0, 'providerPaused' => false, 'hourUtc' => gmdate('Y-m-d H:00'), 'hourUsed' => 0, 'providerPauseRemaining' => 0];
-        $settings = $this->settings->publicData();
+        $settings = $this->settings->publicData(false);
         $accounts = [];
         $missingGroups = [];
         foreach ($settings['roleMap'] as $entry) {
@@ -49,7 +49,7 @@ final class Admin implements ISettings
         return new TemplateResponse('vereinsflieger_login', 'admin', ['settings' => $settings, 'groups' => $groups, 'missingGroups' => $missingGroups, 'usage' => $usage, 'accounts' => $accounts,
             'localLoginUrl' => $this->urls->linkToRoute('core.login.showLoginForm', ['direct' => '1']),
             'saveUrl' => $this->urls->linkToRoute('vereinsflieger_login.admin.save'), 'checkUrl' => $this->urls->linkToRoute('vereinsflieger_login.admin.check'),
-            'pauses' => $this->settings->hasKey() ? $this->guard->pauses($this->settings->key()) : [],
+            'listUrl' => $this->urls->linkToRoute('vereinsflieger_login.admin.listPage'),
             'pauseUrl' => $this->urls->linkToRoute('vereinsflieger_login.admin.unpause')]);
     }
     public function getSection(): string

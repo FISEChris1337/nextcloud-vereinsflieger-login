@@ -61,3 +61,7 @@ This integration authenticates using Vereinsflieger credentials. It does not tra
 The provider’s API terms apply separately from this app’s AGPL license. The supplied API specification prohibits commercial use of the interface. Provider documentation and sample code are not distributed with this app.
 
 Active pauses show a countdown on the login page and can be removed individually in the admin settings. Request counters use keyed hashes. Active pause records additionally contain the login name and IP for administration and are pruned after expiry when the protection is used. Refused sign-ins log the login name, IP and reason in Nextcloud’s log. Completed sign-ins log the Nextcloud account and IP at info level after any native second factor. Nextcloud’s log threshold or a matching `log.condition` must allow info entries; its retention policy applies. Passwords, 2FA codes and AppKeys are never logged.
+
+## Admin lists
+
+Saved identities, confirmed role snapshots, synchronization warnings and active login pauses are loaded in pages of 25 entries. Use the search and Previous/Next controls to find other records; each panel has a bounded scroll area. Account links are retained for authentication, and each account stores only its latest role snapshot. Pagination does not delete records or change group mappings. Dates use the browser locale and time zone.

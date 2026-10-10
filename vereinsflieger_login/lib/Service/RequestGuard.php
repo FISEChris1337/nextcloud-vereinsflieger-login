@@ -141,4 +141,10 @@ final class RequestGuard
     {
         return $this->store->releasePause($this->key($appkey, 'pause_scope'), $identifier);
     }
+    public function pausePage(string $appkey, int $page, string $search): array
+    {
+        $now = $this->clock->getTime();
+        $this->store->prune($now);
+        return $this->store->pausePage($this->key($appkey, 'pause_scope'), $now, $page, $search);
+    }
 }

@@ -12,4 +12,5 @@ return ['routes' => [
     ['name' => 'admin#save', 'url' => '/admin/settings', 'verb' => 'POST'],
     ['name' => 'admin#check', 'url' => '/admin/check', 'verb' => 'POST'],
     ['name' => 'admin#unpause', 'url' => '/admin/unpause', 'verb' => 'POST'],
+    ['name' => 'admin#listPage', 'url' => '/admin/list', 'verb' => 'POST'],
 ]];

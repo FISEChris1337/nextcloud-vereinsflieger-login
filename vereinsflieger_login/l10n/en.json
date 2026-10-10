@@ -184,7 +184,20 @@
     "Default: 15. Successful VF authentication resets username failures; IP failures expire after the pause.": "Default: 15. Successful VF authentication resets username failures; IP failures expire after the pause.",
     "Username pauses apply across all IPs; attempt pauses apply to a username and IP. IP pauses apply to all login names from that address. Removing a pause does not reset API budgets, provider pauses or Nextcloud’s own brute-force protection.": "Username pauses apply across all IPs; attempt pauses apply to a username and IP. IP pauses apply to all login names from that address. Removing a pause does not reset API budgets, provider pauses or Nextcloud’s own brute-force protection.",
     "Select Remember me by default": "Select Remember me by default",
-    "Users can select or deselect Remember me. This setting only controls the initial selection.": "Users can select or deselect Remember me. This setting only controls the initial selection."
+    "Users can select or deselect Remember me. This setting only controls the initial selection.": "Users can select or deselect Remember me. This setting only controls the initial selection.",
+    "Invalid list request.": "Invalid list request.",
+    "The list could not be loaded.": "The list could not be loaded.",
+    "Search login name or IP": "Search login name or IP",
+    "Search account": "Search account",
+    "Search": "Search",
+    "Group synchronization warnings": "Group synchronization warnings",
+    "Previous": "Previous",
+    "Next": "Next",
+    "No entries found.": "No entries found.",
+    "Missing target groups: %s": "Missing target groups: %s",
+    "Loading entries …": "Loading entries …",
+    "Page %s · %s entries": "Page %s · %s entries",
+    "One latest role snapshot per account. A successful login replaces the previous snapshot.": "One latest role snapshot per account. A successful login replaces the previous snapshot."
   },
   "pluralForm": "nplurals=2; plural=(n != 1);"
 }

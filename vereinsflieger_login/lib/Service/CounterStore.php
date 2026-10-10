@@ -170,4 +170,28 @@ final class CounterStore
         }
         return true;
     }
+    public function pausePage(string $scope, int $now, int $page, string $search): array
+    {
+        $query = $this->db->getQueryBuilder();
+        $query->select('p.identifier', 'p.username', 'p.ipaddress', 'p.kind', 'c.expiresat')
+            ->from('vf_login_pauses', 'p')
+            ->innerJoin('p', 'vf_request_limits', 'c', $query->expr()->eq('p.identifier', 'c.identifier'))
+            ->where($query->expr()->eq('p.appscope', $query->createNamedParameter($scope)))
+            ->andWhere($query->expr()->gt('p.expiresat', $query->createNamedParameter($now, \OCP\DB\QueryBuilder\IQueryBuilder::PARAM_INT)))
+            ->andWhere($query->expr()->gt('c.expiresat', $query->createNamedParameter($now, \OCP\DB\QueryBuilder\IQueryBuilder::PARAM_INT)))
+            ->orderBy('p.expiresat')->addOrderBy('p.identifier');
+        AdminLists::search($query, ['p.username', 'p.ipaddress'], $search, $this->db);
+        $query->setFirstResult(($page - 1) * AdminLists::PAGE_SIZE)->setMaxResults(AdminLists::PAGE_SIZE + 1);
+        $result = $query->executeQuery();
+        try {
+            $rows = $result->fetchAllAssociative();
+        } finally {
+            $result->closeCursor();
+        }
+        $items = [];
+        foreach (array_slice($rows, 0, AdminLists::PAGE_SIZE) as $row) {
+            $items[] = ['id' => (string)$row['identifier'], 'username' => (string)$row['username'], 'ip' => (string)$row['ipaddress'], 'kind' => (string)$row['kind'], 'seconds' => (int)$row['expiresat'] - $now, 'expiresAt' => (int)$row['expiresat']];
+        }
+        return ['items' => $items, 'page' => $page, 'hasMore' => count($rows) > AdminLists::PAGE_SIZE];
+    }
 }

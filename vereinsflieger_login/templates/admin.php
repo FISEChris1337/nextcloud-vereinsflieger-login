@@ -63,7 +63,7 @@ declare(strict_types=1);
             <p class="vf-hint"><?php p($l->t('Changes apply to new attempts. Existing pauses keep their expiry time. The check uses saved settings; save changes first.')); ?></p>
             <h4><?php p($l->t('Active login pauses')); ?></h4>
             <p class="vf-hint"><?php p($l->t('Username pauses apply across all IPs; attempt pauses apply to a username and IP. IP pauses apply to all login names from that address. Removing a pause does not reset API budgets, provider pauses or Nextcloud’s own brute-force protection.')); ?></p>
-            <div id="vf-pauses" aria-live="polite"></div>
+            <div id="vf-pauses" data-vf-list="pauses"></div>
         </section>
         <section class="vf-card" id="vf-accounts">
             <div class="vf-card-heading"><div><h3><?php p($l->t('Account links')); ?></h3><p><?php p($l->t('Explicitly link a Vereinsflieger ID to an existing Nextcloud account.')); ?></p></div><button type="button" id="vf-add-link"><?php p($l->t('+ Link account')); ?></button></div>
@@ -85,10 +85,7 @@ declare(strict_types=1);
             } ?>><?php p($name . ' (' . $uid . ')'); ?></option><?php } ?></select></label>
             <p class="vf-hint" id="vf-excluded-hint"><?php p($l->t('Select multiple accounts with Ctrl or ⌘. Include emergency administrators. Exclusion takes precedence over account links. Changes affect future logins; running sessions are not revoked.')); ?></p>
             <h4 id="vf-identities-heading"><?php p($l->t('Automatically saved identities')); ?></h4>
-            <?php if ($_['settings']['provisionedLinks'] === []) { ?><p class="vf-empty"><?php p($l->t('No accounts created or linked automatically yet.')); ?></p><?php } ?>
-            <?php if ($_['settings']['provisionedLinks'] !== []) { ?><ul class="vf-identity-list" tabindex="0" aria-labelledby="vf-identities-heading">
-                <?php foreach ($_['settings']['provisionedLinks'] as $link) { ?><li><?php p('VF ' . $link['vfUid'] . ' → ' . $link['nextcloudUid'] . ($link['blocked'] ? ' · ' . $l->t('blocked') : '')); ?></li><?php } ?>
-            </ul><?php } ?>
+            <div id="vf-identities" data-vf-list="identities" aria-labelledby="vf-identities-heading"></div>
         </section>
         <section class="vf-card" id="vf-roles">
             <div class="vf-card-heading"><div><h3><?php p($l->t('Roles to Nextcloud groups')); ?></h3><p><?php p($l->t('Only explicitly mapped roles change group memberships.')); ?></p></div><button type="button" id="vf-add-role"><?php p($l->t('+ Map role')); ?></button></div>
@@ -98,20 +95,16 @@ declare(strict_types=1);
             <div class="vf-row-labels"><span><?php p($l->t('Vereinsflieger role')); ?></span><span><?php p($l->t('Nextcloud group')); ?></span><span></span></div>
             <div id="vf-role-map"></div>
             <?php if ($_['missingGroups'] !== []) { ?><p class="vf-mapping-warning" role="alert"><?php p($l->t('Missing target groups: %s. Fix or remove these mappings. Login remains possible; all memberships are preserved when an affected sync is skipped.', [implode(', ', $_['missingGroups'])])); ?></p><?php } ?>
-            <?php foreach ($_['settings']['syncWarnings'] as $uid => $warning) { ?><p class="vf-mapping-warning"><?php p($l->t('Last skipped group sync: %s · %s · missing groups: %s. Synchronization is retried at the next VF login after correction.', [$uid, $warning['capturedAt'], implode(', ', $warning['groups'])])); ?></p><?php } ?>
+            <div id="vf-sync-warnings" data-vf-list="warnings"></div>
             <?php if ($_['settings']['knownRoles'] === []) { ?><p class="vf-empty"><?php p($l->t('No roles received yet. Log in with a linked account while group synchronization is disabled. Received roles then become available.')); ?></p><?php } ?>
             <p class="vf-hint"><?php p($l->t('The admin group is excluded. Existing local memberships are preserved; only memberships added by this app can be removed. Changes apply at the next VF login.')); ?></p>
             <p class="vf-hint"><?php p($l->t('Roles are saved per club after successful login. Mappings use only these exact names. A saved role grants no membership unless it is returned again at that user’s login.')); ?></p>
-            <h4><?php p($l->t('Last verified roles')); ?></h4>
-            <?php if ($_['settings']['snapshots'] === []) { ?>
-                <p class="vf-empty"><?php p($l->t('No roles received yet. A successful Vereinsflieger login supplies the first snapshot.')); ?></p>
-            <?php } ?>
-            <?php foreach ($_['settings']['snapshots'] as $uid => $snapshot) { ?>
-                <div class="vf-snapshot"><strong><?php p($uid); ?></strong><time datetime="<?php p($snapshot['capturedAt']); ?>"><?php p($snapshot['capturedAt']); ?></time><div><?php foreach ($snapshot['roles'] as $role) { ?><span class="vf-role-chip"><?php p($role); ?></span><?php } ?></div></div>
-            <?php } ?>
+            <h4 id="vf-snapshots-heading"><?php p($l->t('Last verified roles')); ?></h4>
+            <p class="vf-hint"><?php p($l->t("One latest role snapshot per account. A successful login replaces the previous snapshot.")); ?></p>
+            <div id="vf-snapshots" data-vf-list="snapshots" aria-labelledby="vf-snapshots-heading"></div>
         </section>
         <section class="vf-card" id="vf-maintenance">
-            <h3><?php p($l->t('Maintenance & updates')); ?></h3><dl class="vf-facts"><dt><?php p($l->t('App version')); ?></dt><dd>0.6.5 · <?php p($l->t('Development version')); ?></dd><dt>Nextcloud</dt><dd>33–35 · PHP ≥ 8.3</dd><dt><?php p($l->t('Local login')); ?></dt><dd><?php p($l->t('Available for local accounts with ?direct=1')); ?></dd><dt><?php p($l->t('Remember me')); ?></dt><dd><?php p($l->t('Nextcloud cookie according to server settings')); ?></dd><dt><?php p($l->t('Source code')); ?></dt><dd><?php p($l->t('Separate Git repository with release packages')); ?></dd></dl>
+            <h3><?php p($l->t('Maintenance & updates')); ?></h3><dl class="vf-facts"><dt><?php p($l->t('App version')); ?></dt><dd>0.6.6</dd><dt>Nextcloud</dt><dd>33–35 · PHP ≥ 8.3</dd><dt><?php p($l->t('Local login')); ?></dt><dd><?php p($l->t('Available for local accounts with ?direct=1')); ?></dd><dt><?php p($l->t('Remember me')); ?></dt><dd><?php p($l->t('Nextcloud cookie according to server settings')); ?></dd><dt><?php p($l->t('Source code')); ?></dt><dd><?php p($l->t('Separate Git repository with release packages')); ?></dd></dl>
             <p><?php p($l->t('Back up app configuration and database before updating. Test new Nextcloud major versions before use.')); ?></p>
         </section>
         <footer class="vf-actions"><p id="vf-message" role="status" aria-live="polite"><?php p($l->t('Changes are applied when you save.')); ?></p><button type="submit" class="primary"><?php p($l->t('Save settings')); ?></button></footer>

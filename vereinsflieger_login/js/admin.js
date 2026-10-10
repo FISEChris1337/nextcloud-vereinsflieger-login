@@ -12,38 +12,147 @@
         const checkResult = document.getElementById("vf-check-result");
         const links = document.getElementById("vf-links");
         const roles = document.getElementById("vf-role-map");
-        const pauses = document.getElementById("vf-pauses");
-        const renderPauses = (items) => {
-            if (!pauses) return;
-            pauses.replaceChildren();
-            if (items.length === 0) {
-                const empty = document.createElement("p");
-                empty.className = "vf-empty";
-                empty.textContent = translate("No active login pauses.");
-                pauses.append(empty);
-            }
-            const labels = {
-                failures: translate("Account failure limit"),
-                pair_attempts: translate("Account attempt limit"),
-                ip_failures: translate("IP failure limit"),
-                ip_attempts: translate("IP attempt limit"),
+        const pagers = [];
+        const displayTime = (value) => {
+            const date = new Date(value);
+            return Number.isNaN(date.getTime()) ? value : new Intl.DateTimeFormat(
+                document.documentElement.lang || undefined,
+                { dateStyle: "medium", timeStyle: "short" },
+            ).format(date);
+        };
+        const setupList = (container) => {
+            const kind = container.dataset.vfList;
+            let currentPage = 1, hasMore = false, busy = false, controller;
+            const toolbar = document.createElement("div");
+            toolbar.className = "vf-list-toolbar";
+            const filter = document.createElement("input");
+            filter.type = "search";
+            filter.maxLength = 128;
+            filter.placeholder = kind === "pauses" ? translate("Search login name or IP") : translate("Search account");
+            filter.setAttribute("aria-label", filter.placeholder);
+            // List filtering must not mark configuration as changed or submit its form.
+            filter.addEventListener("input", (event) => event.stopPropagation());
+            const search = document.createElement("button");
+            search.type = "button";
+            search.textContent = translate("Search");
+            toolbar.append(filter, search);
+            const rows = document.createElement("div");
+            rows.className = "vf-list-viewport";
+            rows.tabIndex = 0;
+            rows.setAttribute("role", "region");
+            rows.setAttribute("aria-label", {
+                identities: translate("Automatically saved identities"),
+                snapshots: translate("Last verified roles"),
+                warnings: translate("Group synchronization warnings"),
+                pauses: translate("Active login pauses"),
+            }[kind]);
+            const navigation = document.createElement("div");
+            navigation.className = "vf-list-navigation";
+            const previous = document.createElement("button"), next = document.createElement("button");
+            previous.type = next.type = "button";
+            previous.textContent = translate("Previous");
+            next.textContent = translate("Next");
+            const status = document.createElement("span");
+            status.setAttribute("role", "status");
+            status.setAttribute("aria-live", "polite");
+            navigation.append(previous, status, next);
+            container.append(toolbar, rows, navigation);
+            const syncControls = () => {
+                previous.disabled = busy || currentPage === 1;
+                next.disabled = busy || !hasMore;
             };
-            items.forEach((pause) => {
-                const row = document.createElement("div");
-                row.className = "vf-pause-row";
-                const label = document.createElement("span");
-                label.textContent = (pause.username || translate("All login names")) + " · " + pause.ip + " · " + labels[pause.kind];
-                const remaining = document.createElement("span");
-                remaining.dataset.pauseUntil = String(Date.now() + pause.seconds * 1000);
-                remaining.setAttribute("aria-live", "off");
-                const remove = document.createElement("button");
-                remove.type = "button";
-                remove.textContent = translate("Remove login pause");
-                remove.addEventListener("click", () => request(state.pauseUrl, { identifier: pause.id }, null, (data) => renderPauses(data.pauses)));
-                row.append(label, remaining, remove);
-                pauses.append(row);
+            const render = (items) => {
+                rows.replaceChildren();
+                if (items.length === 0) {
+                    const empty = document.createElement("p");
+                    empty.className = "vf-empty";
+                    empty.textContent = translate("No entries found.");
+                    rows.append(empty);
+                }
+                const labels = {
+                    failures: translate("Account failure limit"), pair_attempts: translate("Account attempt limit"),
+                    ip_failures: translate("IP failure limit"), ip_attempts: translate("IP attempt limit"),
+                };
+                items.forEach((item) => {
+                    const row = document.createElement("div");
+                    if (kind === "pauses") {
+                        row.className = "vf-pause-row";
+                        const label = document.createElement("span"), remaining = document.createElement("span");
+                        label.textContent = (item.username || translate("All login names")) + " · " + item.ip + " · " + (labels[item.kind] || item.kind);
+                        remaining.dataset.pauseUntil = String(Date.now() + item.seconds * 1000);
+                        const remove = document.createElement("button");
+                        remove.type = "button";
+                        remove.textContent = translate("Remove login pause");
+                        remove.addEventListener("click", () => request(state.pauseUrl, { identifier: item.id }, null, () => load(currentPage)));
+                        row.append(label, remaining, remove);
+                    } else if (kind === "identities") {
+                        row.className = "vf-identity-row";
+                        row.textContent = "VF " + item.vfUid + " → " + item.uid + (item.blocked ? " · " + translate("blocked") : "");
+                    } else {
+                        row.className = "vf-snapshot";
+                        const name = document.createElement("strong"), time = document.createElement("time");
+                        name.textContent = item.uid;
+                        time.dateTime = item.capturedAt;
+                        time.textContent = displayTime(item.capturedAt);
+                        const names = document.createElement("div");
+                        if (kind === "warnings") {
+                            row.classList.add("vf-mapping-warning");
+                            names.textContent = translate("Missing target groups: %s", [item.names.join(", ")]);
+                        } else item.names.forEach((role) => {
+                            const chip = document.createElement("span");
+                            chip.className = "vf-role-chip";
+                            chip.textContent = role;
+                            names.append(chip);
+                        });
+                        row.append(name, time, names);
+                    }
+                    rows.append(row);
+                });
+                rows.scrollTop = 0;
+                updatePauseTimes();
+            };
+            const load = async (page) => {
+                if (controller) controller.abort();
+                const active = controller = new AbortController();
+                busy = true;
+                rows.setAttribute("aria-busy", "true");
+                status.textContent = translate("Loading entries …");
+                syncControls();
+                try {
+                    const response = await fetch(state.listUrl, {
+                        method: "POST", credentials: "same-origin", signal: active.signal,
+                        headers: { "Content-Type": "application/json", requesttoken: OC.requestToken },
+                        body: JSON.stringify({ kind, page, search: filter.value }),
+                    });
+                    const data = await response.json();
+                    if (!response.ok) throw new Error(data.message || translate("The list could not be loaded."));
+                    if (active !== controller) return;
+                    if (!Array.isArray(data.items) || data.items.length > 25 || !Number.isInteger(data.page) || typeof data.hasMore !== "boolean") throw new Error(translate("The list could not be loaded."));
+                    if (data.items.length === 0 && page > 1 && !data.hasMore) return load(page - 1);
+                    currentPage = data.page;
+                    hasMore = data.hasMore;
+                    render(data.items);
+                    status.textContent = translate("Page %s · %s entries", [String(currentPage), String(data.items.length)]);
+                } catch (error) {
+                    if (active !== controller || error.name === "AbortError") return;
+                    status.textContent = translate("The list could not be loaded.");
+                    // Keep the previous page available and allow retrying the same request.
+                } finally {
+                    if (active === controller) {
+                        busy = false;
+                        rows.setAttribute("aria-busy", "false");
+                        syncControls();
+                    }
+                }
+            };
+            search.addEventListener("click", () => load(1));
+            filter.addEventListener("keydown", (event) => {
+                if (event.key === "Enter") { event.preventDefault(); event.stopPropagation(); load(1); }
             });
-            updatePauseTimes();
+            previous.addEventListener("click", () => load(Math.max(1, currentPage - 1)));
+            next.addEventListener("click", () => load(currentPage + 1));
+            pagers.push({ syncControls });
+            load(1);
         };
         const updatePauseTimes = () => {
             root.querySelectorAll("[data-pause-until]").forEach((element) => {
@@ -150,10 +259,10 @@
         state.settings.roleMap.forEach(addRole);
         document
             .getElementById("vf-add-link")
-            .addEventListener("click", () => addLink());
+            .addEventListener("click", () => { addLink(); links.lastElementChild.scrollIntoView({ block: "nearest" }); });
         document
             .getElementById("vf-add-role")
-            .addEventListener("click", () => addRole());
+            .addEventListener("click", () => { addRole(); roles.lastElementChild.scrollIntoView({ block: "nearest" }); });
         document.getElementById("vf-add-role").disabled =
             state.settings.knownRoles.length === 0;
         form.addEventListener("input", () => {
@@ -206,7 +315,7 @@
                             ),
                     );
                 message.textContent = data.message;
-                if (onSuccess) onSuccess(data);
+                if (onSuccess) await onSuccess(data);
                 if (result) {
                     result.dataset.state = "success";
                     result.textContent = translate("OK: %s", [data.message]);
@@ -225,6 +334,7 @@
                 buttons.forEach((b) => {
                     b.disabled = false;
                 });
+                pagers.forEach((pager) => pager.syncControls());
                 document.getElementById("vf-add-role").disabled =
                     state.settings.knownRoles.length === 0;
             }
@@ -274,7 +384,7 @@
             .addEventListener("click", () =>
                 request(state.checkUrl, {}, checkResult),
             );
-        renderPauses(state.pauses || []);
+        root.querySelectorAll("[data-vf-list]").forEach(setupList);
         window.setInterval(updatePauseTimes, 1000);
     };
     if (document.readyState === "loading")

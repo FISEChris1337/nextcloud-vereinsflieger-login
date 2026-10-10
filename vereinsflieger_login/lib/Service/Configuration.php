@@ -47,14 +47,17 @@ final class Configuration
         }
         return $this->crypto->decrypt($value);
     }
-    public function publicData(): array
+    public function publicData(bool $includeLists = true): array
     {
         $data = $this->read();
         $data['knownRoles'] = $this->knownRoles->all($data['cid']);
-        $data['provisionedLinks'] = $this->accountLinks->all($data['cid']);
+        $data['provisionedLinks'] = $includeLists ? $this->accountLinks->all($data['cid']) : [];
         $data['hasKey'] = $this->hasKey();
         $data['snapshots'] = [];
         $data['syncWarnings'] = [];
+        if (!$includeLists) {
+            return $data;
+        }
         foreach ($this->activeLinks() as $link) {
             $warning = json_decode($this->config->getUserValue($link['nextcloudUid'], 'vereinsflieger_login', 'group_sync_warning', ''), true);
             if (is_array($warning) && ($warning['vfUid'] ?? '') === $link['vfUid'] && ($warning['cid'] ?? '') === $data['cid'] && is_array($warning['groups'] ?? null) && is_string($warning['capturedAt'] ?? null)) {

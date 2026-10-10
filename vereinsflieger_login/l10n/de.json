@@ -184,7 +184,20 @@
     "Default: 15. Successful VF authentication resets username failures; IP failures expire after the pause.": "Standard: 15. Erfolgreiche VF-Anmeldung setzt Fehlversuche des Benutzernamens zurück; IP-Fehlversuche laufen nach der Pause ab.",
     "Username pauses apply across all IPs; attempt pauses apply to a username and IP. IP pauses apply to all login names from that address. Removing a pause does not reset API budgets, provider pauses or Nextcloud’s own brute-force protection.": "Benutzernamensperren gelten über alle IPs hinweg; Versuchssperren gelten für Benutzername und IP. IP-Sperren gelten für alle Benutzernamen dieser Adresse. Das Aufheben setzt weder API-Budgets, Anbieterpausen noch den Nextcloud-eigenen Brute-Force-Schutz zurück.",
     "Select Remember me by default": "„Angemeldet bleiben“ vorauswählen",
-    "Users can select or deselect Remember me. This setting only controls the initial selection.": "Nutzer können „Angemeldet bleiben“ selbst an- oder abwählen. Diese Einstellung steuert nur die Vorauswahl."
+    "Users can select or deselect Remember me. This setting only controls the initial selection.": "Nutzer können „Angemeldet bleiben“ selbst an- oder abwählen. Diese Einstellung steuert nur die Vorauswahl.",
+    "Invalid list request.": "Ungültige Listenabfrage.",
+    "The list could not be loaded.": "Die Liste konnte nicht geladen werden.",
+    "Search login name or IP": "Anmeldename oder IP suchen",
+    "Search account": "Konto suchen",
+    "Search": "Suchen",
+    "Group synchronization warnings": "Hinweise zur Gruppensynchronisierung",
+    "Previous": "Zurück",
+    "Next": "Weiter",
+    "No entries found.": "Keine Einträge gefunden.",
+    "Missing target groups: %s": "Fehlende Zielgruppen: %s",
+    "Loading entries …": "Einträge werden geladen …",
+    "Page %s · %s entries": "Seite %s · %s Einträge",
+    "One latest role snapshot per account. A successful login replaces the previous snapshot.": "Pro Konto wird nur der letzte bestätigte Rollenstand gespeichert. Eine erfolgreiche Anmeldung ersetzt den vorherigen Stand."
   },
   "pluralForm": "nplurals=2; plural=(n != 1);"
 }

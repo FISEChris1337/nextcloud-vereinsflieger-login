@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace OCA\VereinsfliegerLogin\Controller;
 
+use OCA\VereinsfliegerLogin\Service\AdminLists;
 use OCA\VereinsfliegerLogin\Service\Configuration;
 use OCA\VereinsfliegerLogin\Service\RequestGuard;
 use OCP\AppFramework\Controller;
@@ -17,7 +18,7 @@ use OCP\IRequest;
 // Default middleware requires administrator, login, completed 2FA and CSRF.
 final class AdminController extends Controller
 {
-    public function __construct(IRequest $request, private Configuration $settings, private \OCP\IL10N $l10n, private RequestGuard $guard)
+    public function __construct(IRequest $request, private Configuration $settings, private \OCP\IL10N $l10n, private RequestGuard $guard, private AdminLists $lists)
     {
         parent::__construct('vereinsflieger_login', $request);
     }
@@ -49,9 +50,19 @@ final class AdminController extends Controller
             if (!$this->settings->hasKey() || !$this->guard->releasePause($this->settings->key(), $identifier)) {
                 return new JSONResponse(['message' => $this->l10n->t('Login pause not found or already expired.')], 404);
             }
-            return new JSONResponse(['message' => $this->l10n->t('Login pause removed.'), 'pauses' => $this->guard->pauses($this->settings->key())]);
+            return new JSONResponse(['message' => $this->l10n->t('Login pause removed.')]);
         } catch (\Throwable) {
             return new JSONResponse(['message' => $this->l10n->t('The login pause could not be removed.')], 500);
+        }
+    }
+    public function listPage(string $kind = '', int $page = 1, string $search = ''): JSONResponse
+    {
+        try {
+            return new JSONResponse($this->lists->page($kind, $page, $search));
+        } catch (\OCA\VereinsfliegerLogin\Service\ValidationException $e) {
+            return new JSONResponse(['message' => $e->translated($this->l10n)], 400);
+        } catch (\Throwable) {
+            return new JSONResponse(['message' => $this->l10n->t('The list could not be loaded.')], 500);
         }
     }
 }

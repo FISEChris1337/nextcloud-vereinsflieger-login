@@ -143,7 +143,7 @@ namespace {
     $file = tempnam(sys_get_temp_dir(), 'vf-counter-'); $connection = new SqlConnection($file); $children = [];
     try {
         for ($i = 0; $i < 4; ++$i) {
-            $cmd = [PHP_BINARY, '-d', 'extension_dir=' . ini_get('extension_dir'), '-d', 'extension=pdo_sqlite', __FILE__, 'worker', $file];
+            $cmd = [PHP_BINARY, '-n', '-d', 'extension_dir=' . ini_get('extension_dir'), '-d', 'extension=pdo_sqlite', __FILE__, 'worker', $file];
             $child = proc_open($cmd, [0 => ['pipe', 'r'], 1 => ['pipe', 'w'], 2 => ['pipe', 'w']], $pipes);
             if (!is_resource($child)) { throw new \RuntimeException('Worker failed to start'); } fclose($pipes[0]); $children[] = [$child, $pipes];
         }
