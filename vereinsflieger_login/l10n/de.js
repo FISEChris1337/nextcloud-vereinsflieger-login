@@ -198,7 +198,8 @@ OC.L10N.register(
     "{role} (previous mapping, not verified yet)": "{role} (bisherige Zuordnung, noch nicht bestätigt)",
     "{group} (target group missing)": "{group} (Zielgruppe fehlt)",
     "OK: {message}": "OK: {message}",
-    "Error: {message}": "Fehler: {message}"
+    "Error: {message}": "Fehler: {message}",
+    "Search account or role": "Konto oder Rolle suchen"
 },
     "nplurals=2; plural=(n != 1);"
 );

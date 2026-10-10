@@ -232,5 +232,6 @@ namespace {
     require __DIR__ . '/profiles.php';
     require __DIR__ . '/l10n.php';
     require __DIR__ . '/security.php';
+    require __DIR__ . '/admin-lists-search.php';
     echo "\n$count behavior checks passed. No live API calls.\n";
 }

@@ -29,7 +29,8 @@
             const filter = document.createElement("input");
             filter.type = "search";
             filter.maxLength = 128;
-            filter.placeholder = kind === "pauses" ? translate("Search login name or IP") : translate("Search account");
+            filter.placeholder = kind === "pauses" ? translate("Search login name or IP")
+                : kind === "snapshots" ? translate("Search account or role") : translate("Search account");
             filter.setAttribute("aria-label", filter.placeholder);
             // List filtering must not mark configuration as changed or submit its form.
             filter.addEventListener("input", (event) => event.stopPropagation());

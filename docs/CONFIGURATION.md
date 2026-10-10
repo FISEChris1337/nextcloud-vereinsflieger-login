@@ -64,4 +64,4 @@ Active pauses show a countdown on the login page and can be removed individually
 
 ## Admin lists
 
-Saved identities, confirmed role snapshots, synchronization warnings and active login pauses are loaded in pages of 25 entries. Use the search and Previous/Next controls to find other records; each panel has a bounded scroll area. Account links are retained for authentication, and each account stores only its latest role snapshot. Pagination does not delete records or change group mappings. Dates use the browser locale and time zone.
+Saved identities, confirmed role snapshots, synchronization warnings and active login pauses are loaded in pages of 25 entries. Use the search and Previous/Next controls to find other records. Confirmed role snapshots can be searched by account ID or role name (partial matches, case-insensitive); each panel has a bounded scroll area. Account links are retained for authentication, and each account stores only its latest role snapshot. Pagination does not delete records or change group mappings. Dates use the browser locale and time zone.

@@ -58,6 +58,9 @@ final class AdminLists
             $query->andWhere($linked)->orderBy('p.userid');
             $columns = ['p.userid'];
         }
+        if ($kind === 'snapshots' && trim($search) !== '') {
+            return $this->snapshotSearchPage($query, $data['cid'], $page, trim($search));
+        }
         self::search($query, $columns, trim($search), $this->db);
         $query->setFirstResult(($page - 1) * self::PAGE_SIZE)->setMaxResults(self::PAGE_SIZE + 1);
         $result = $query->executeQuery();
@@ -73,19 +76,71 @@ final class AdminLists
                 $items[] = ['uid' => (string)$row['ncuid'], 'vfUid' => (string)$row['vfuid'], 'blocked' => (bool)$row['blocked']];
                 continue;
             }
-            $value = json_decode($row['configvalue'], true);
-            $uid = (string)$row['userid'];
-            if (!is_array($value) || ($value['cid'] ?? '') !== $data['cid'] || !is_string($value['vfUid'] ?? null) || $this->settings->linkedUid($value['vfUid']) !== $uid || !is_string($value['capturedAt'] ?? null)) {
-                continue;
+            $item = $this->snapshotItem($row, $data['cid'], $kind === 'snapshots' ? 'roles' : 'groups');
+            if ($item !== null) {
+                $items[] = $item;
             }
-            $names = $value[$kind === 'snapshots' ? 'roles' : 'groups'] ?? null;
-            if (!is_array($names) || !array_is_list($names) || array_filter($names, static fn ($name): bool => !is_string($name)) !== []) {
-                continue;
-            }
-            // Return only display data, never other stored preferences or credentials.
-            $items[] = ['uid' => $uid, 'capturedAt' => $value['capturedAt'], 'names' => $names];
         }
         return ['items' => $items, 'page' => $page, 'hasMore' => $hasMore];
+    }
+
+    private function snapshotSearchPage(IQueryBuilder $query, string $cid, int $page, string $search): array
+    {
+        // Match decoded role names, including Unicode in legacy escaped JSON.
+        // Read bounded database batches; paginate matching accounts, not raw rows.
+        $skip = ($page - 1) * self::PAGE_SIZE;
+        $items = [];
+        $offset = 0;
+        do {
+            $query->setFirstResult($offset)->setMaxResults(100);
+            $result = $query->executeQuery();
+            try {
+                $rows = $result->fetchAllAssociative();
+            } finally {
+                $result->closeCursor();
+            }
+            foreach ($rows as $row) {
+                $item = $this->snapshotItem($row, $cid, 'roles');
+                if ($item === null || !self::matchesSnapshot($item, $search)) {
+                    continue;
+                }
+                if ($skip > 0) {
+                    --$skip;
+                    continue;
+                }
+                $items[] = $item;
+                if (count($items) > self::PAGE_SIZE) {
+                    return ['items' => array_slice($items, 0, self::PAGE_SIZE), 'page' => $page, 'hasMore' => true];
+                }
+            }
+            $offset += count($rows);
+        } while (count($rows) === 100);
+        return ['items' => $items, 'page' => $page, 'hasMore' => false];
+    }
+
+    private static function matchesSnapshot(array $item, string $search): bool
+    {
+        foreach ([$item['uid'], ...$item['names']] as $value) {
+            if (mb_stripos($value, $search, 0, 'UTF-8') !== false) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private function snapshotItem(array $row, string $cid, string $field): ?array
+    {
+        $value = json_decode($row['configvalue'], true);
+        $uid = (string)$row['userid'];
+        if (!is_array($value) || ($value['cid'] ?? '') !== $cid || !is_string($value['vfUid'] ?? null) || $this->settings->linkedUid($value['vfUid']) !== $uid || !is_string($value['capturedAt'] ?? null)) {
+            return null;
+        }
+        $names = $value[$field] ?? null;
+        if (!is_array($names) || !array_is_list($names) || array_filter($names, static fn ($name): bool => !is_string($name)) !== []) {
+            return null;
+        }
+        // Return only display data, never other stored preferences or credentials.
+        return ['uid' => $uid, 'capturedAt' => $value['capturedAt'], 'names' => $names];
     }
 
     public static function search(IQueryBuilder $query, array $columns, string $search, IDBConnection $db): void

@@ -197,7 +197,8 @@
     "{role} (previous mapping, not verified yet)": "{role} (previous mapping, not verified yet)",
     "{group} (target group missing)": "{group} (target group missing)",
     "OK: {message}": "OK: {message}",
-    "Error: {message}": "Error: {message}"
+    "Error: {message}": "Error: {message}",
+    "Search account or role": "Search account or role"
   },
   "pluralForm": "nplurals=2; plural=(n != 1);"
 }

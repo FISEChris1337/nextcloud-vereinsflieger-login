@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.6.8 (unreleased)
+
+Find confirmed role snapshots by account ID or role name, including partial and case-insensitive Unicode matches. Paginate matching accounts and preserve bounded database reads.
+
 ## 0.6.7
 
 Fix unresolved placeholders in admin pagination, login-pause countdowns, mapping warnings and configuration-check results. Use native Nextcloud JavaScript translation parameters for German and English.
