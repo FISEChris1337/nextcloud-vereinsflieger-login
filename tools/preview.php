@@ -22,7 +22,7 @@ namespace {
     echo file_get_contents(__DIR__ . '/../vereinsflieger_login/css/style.css');
     echo '</style><body><div class="demo-banner">Offline-Vorschau · Beispieldaten · keine Verbindung zu Nextcloud oder Vereinsflieger</div>';
     require __DIR__ . '/../vereinsflieger_login/templates/admin.php';
-    echo '<script>window.OC={requestToken:"offline-demo",L10N:{register:(app,strings)=>{window.__translations=strings;},translate:(app,text,args=[])=>{let i=0;return (window.__translations[text]||text).replace(/%s/g,()=>args[i++]);}}};window.__vfRequests=[];window.fetch=async(url,options)=>{if(url==="/demo/list")return {ok:true,json:async()=>({items:[],page:JSON.parse(options.body).page,hasMore:false})};window.__vfRequests.push({url,body:JSON.parse(options.body)});return {ok:true,json:async()=>({message:"Offline-Vorschau: keine Einstellungen gespeichert und keine API aufgerufen."})};};</script><script>';
+    echo '<script>window.OC={requestToken:"offline-demo",L10N:{register:(app,strings)=>{window.__translations=strings;},translate:(app,text,args={})=>(window.__translations[text]||text).replace(/\{([A-Za-z][A-Za-z0-9_]*)\}/g,(match,key)=>Object.hasOwn(args,key)?String(args[key]):match)}};window.__vfRequests=[];window.fetch=async(url,options)=>{if(url==="/demo/list")return {ok:true,json:async()=>({items:[],page:JSON.parse(options.body).page,hasMore:false})};window.__vfRequests.push({url,body:JSON.parse(options.body)});return {ok:true,json:async()=>({message:"Offline-Vorschau: keine Einstellungen gespeichert und keine API aufgerufen."})};};</script><script>';
     echo file_get_contents(__DIR__ . '/../vereinsflieger_login/l10n/de.js');
     echo file_get_contents(__DIR__ . '/../vereinsflieger_login/js/admin.js');
     echo '</script></body></html>';

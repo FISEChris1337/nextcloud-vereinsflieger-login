@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.6.7
+
+Fix unresolved placeholders in admin pagination, login-pause countdowns, mapping warnings and configuration-check results. Use native Nextcloud JavaScript translation parameters for German and English.
+
 ## 0.6.6
 
 Paginate saved identities, confirmed role snapshots, group synchronization warnings and active login pauses in the admin interface. Add account/IP search, bounded scrolling panels and local date formatting. Preserve complete account links and the latest role snapshot per account.

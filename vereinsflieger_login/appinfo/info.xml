@@ -28,7 +28,7 @@ Independent community integration. Not an official Vereinsflieger product.</desc
 - Zentrale Verwaltung: Deutsche und englische Adminoberfläche mit Gruppenmapping, API-Verbrauch, konfigurierbaren Anmeldesperren und Entsperrfunktion.
 
 Unabhängige Community-Integration. Kein offizielles Vereinsflieger-Produkt.</description>
-  <version>0.6.6</version>
+  <version>0.6.7</version>
   <licence>agpl</licence>
   <author>Vereinsflieger Login contributors</author>
   <namespace>VereinsfliegerLogin</namespace>

@@ -104,7 +104,7 @@ declare(strict_types=1);
             <div id="vf-snapshots" data-vf-list="snapshots" aria-labelledby="vf-snapshots-heading"></div>
         </section>
         <section class="vf-card" id="vf-maintenance">
-            <h3><?php p($l->t('Maintenance & updates')); ?></h3><dl class="vf-facts"><dt><?php p($l->t('App version')); ?></dt><dd>0.6.6</dd><dt>Nextcloud</dt><dd>33–35 · PHP ≥ 8.3</dd><dt><?php p($l->t('Local login')); ?></dt><dd><?php p($l->t('Available for local accounts with ?direct=1')); ?></dd><dt><?php p($l->t('Remember me')); ?></dt><dd><?php p($l->t('Nextcloud cookie according to server settings')); ?></dd><dt><?php p($l->t('Source code')); ?></dt><dd><?php p($l->t('Separate Git repository with release packages')); ?></dd></dl>
+            <h3><?php p($l->t('Maintenance & updates')); ?></h3><dl class="vf-facts"><dt><?php p($l->t('App version')); ?></dt><dd>0.6.7</dd><dt>Nextcloud</dt><dd>33–35 · PHP ≥ 8.3</dd><dt><?php p($l->t('Local login')); ?></dt><dd><?php p($l->t('Available for local accounts with ?direct=1')); ?></dd><dt><?php p($l->t('Remember me')); ?></dt><dd><?php p($l->t('Nextcloud cookie according to server settings')); ?></dd><dt><?php p($l->t('Source code')); ?></dt><dd><?php p($l->t('Separate Git repository with release packages')); ?></dd></dl>
             <p><?php p($l->t('Back up app configuration and database before updating. Test new Nextcloud major versions before use.')); ?></p>
         </section>
         <footer class="vf-actions"><p id="vf-message" role="status" aria-live="polite"><?php p($l->t('Changes are applied when you save.')); ?></p><button type="submit" class="primary"><?php p($l->t('Save settings')); ?></button></footer>

@@ -9,7 +9,7 @@ const { chromium } = require("playwright");
     let checks = 0;
     const check = (ok, label) => { assert.ok(ok, label); checks++; };
     try {
-        const context = await browser.newContext();
+        const context = await browser.newContext({ locale: fixture.language === "de" ? "de-DE" : "en-US" });
         const page = await context.newPage();
         const errors = [];
         page.on("pageerror", (error) => errors.push(error.message));
@@ -27,6 +27,18 @@ const { chromium } = require("playwright");
         const state = await page.locator("#vf-admin").evaluate((el) => JSON.parse(el.dataset.state));
         const listUrl = new URL(state.listUrl, fixture.url).href;
         const token = await page.evaluate(() => OC.requestToken);
+        const statuses = await page.locator(".vf-list-navigation [role=status]").allTextContents();
+        check(statuses.length === 4 && statuses.every((text) => /(?:Page|Seite) 1 · \d+ (?:entries|Einträge)/.test(text)), "native pagination displays resolved page and row counts");
+        const interpolation = await page.evaluate(() => {
+            const params = { page: "2", count: "25", groups: "Pilot & <Crew>", role: "Pilot & <Crew>", group: "Pilot & <Crew>", time: "14:59", message: "Test & <message>" };
+            return ["Page {page} · {count} entries", "Missing target groups: {groups}", "Remaining: {time}", "{role} (previous mapping, not verified yet)", "{group} (target group missing)", "OK: {message}", "Error: {message}"].map((text) => OC.L10N.translate("vereinsflieger_login", text, params, undefined, { escape: false }));
+        });
+        check(interpolation.every((text) => !/%s|\{(?:page|count|groups|role|group|time|message)\}/.test(text)) && interpolation[0].includes("2 · 25") && interpolation[1].includes("Pilot & <Crew>") && interpolation[2].includes("14:59") && interpolation[5] === "OK: Test & <message>", "native translation parameters resolve without double escaping");
+        check(interpolation[0] === (fixture.language === "de" ? "Seite 2 · 25 Einträge" : "Page 2 · 25 entries"), "native translation uses the account language");
+        await page.locator("#vf-check").click();
+        await page.waitForFunction(() => ["success", "error"].includes(document.querySelector("#vf-check-result").dataset.state));
+        const checkText = await page.locator("#vf-check-result").textContent();
+        check(/^(?:OK|Error|Fehler): .+/.test(checkText) && !/%s|\{message\}/.test(checkText), "native local configuration check displays its complete result");
         check(state.settings.snapshots.length === 0 && state.settings.provisionedLinks.length === 0, "initial page does not embed every record");
         for (const kind of ["identities", "snapshots", "warnings", "pauses"]) {
             const response = await context.request.post(listUrl, { data: { kind, page: 1 }, headers: { requesttoken: token } });

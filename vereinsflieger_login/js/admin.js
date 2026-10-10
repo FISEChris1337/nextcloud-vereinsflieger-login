@@ -1,8 +1,9 @@
 /* SPDX-License-Identifier: AGPL-3.0-or-later */
 (() => {
     "use strict";
-    const translate = (text, parameters = []) =>
-        OC.L10N.translate("vereinsflieger_login", text, parameters);
+    const translate = (text, parameters = {}) =>
+        // Every translated value is assigned through textContent or a plain-text attribute.
+        OC.L10N.translate("vereinsflieger_login", text, parameters, undefined, { escape: false });
     const init = () => {
         const root = document.getElementById("vf-admin");
         if (!root) return;
@@ -97,7 +98,7 @@
                         const names = document.createElement("div");
                         if (kind === "warnings") {
                             row.classList.add("vf-mapping-warning");
-                            names.textContent = translate("Missing target groups: %s", [item.names.join(", ")]);
+                            names.textContent = translate("Missing target groups: {groups}", { groups: item.names.join(", ") });
                         } else item.names.forEach((role) => {
                             const chip = document.createElement("span");
                             chip.className = "vf-role-chip";
@@ -132,7 +133,7 @@
                     currentPage = data.page;
                     hasMore = data.hasMore;
                     render(data.items);
-                    status.textContent = translate("Page %s · %s entries", [String(currentPage), String(data.items.length)]);
+                    status.textContent = translate("Page {page} · {count} entries", { page: String(currentPage), count: String(data.items.length) });
                 } catch (error) {
                     if (active !== controller || error.name === "AbortError") return;
                     status.textContent = translate("The list could not be loaded.");
@@ -158,7 +159,7 @@
             root.querySelectorAll("[data-pause-until]").forEach((element) => {
                 const seconds = Math.max(0, Math.ceil((Number(element.dataset.pauseUntil) - Date.now()) / 1000));
                 const time = String(Math.floor(seconds / 60)).padStart(2, "0") + ":" + String(seconds % 60).padStart(2, "0");
-                element.textContent = seconds > 0 ? translate("Remaining: %s", [time]) : translate("Expired");
+                element.textContent = seconds > 0 ? translate("Remaining: {time}", { time }) : translate("Expired");
             });
         };
         const input = (label, value, numeric = false) => {
@@ -215,8 +216,8 @@
                 const previous = document.createElement("option");
                 previous.value = value.role;
                 previous.textContent = translate(
-                    "%s (previous mapping, not verified yet)",
-                    [value.role],
+                    "{role} (previous mapping, not verified yet)",
+                    { role: value.role },
                 );
                 role.append(previous);
             }
@@ -234,7 +235,7 @@
                 const option = document.createElement("option");
                 option.value = gid;
                 option.textContent = (state.missingGroups || []).includes(gid)
-                    ? translate("%s (target group missing)", [gid])
+                    ? translate("{group} (target group missing)", { group: gid })
                     : gid;
                 select.append(option);
             });
@@ -318,16 +319,14 @@
                 if (onSuccess) await onSuccess(data);
                 if (result) {
                     result.dataset.state = "success";
-                    result.textContent = translate("OK: %s", [data.message]);
+                    result.textContent = translate("OK: {message}", { message: data.message });
                 }
                 return true;
             } catch (error) {
                 message.textContent = error.message;
                 if (result) {
                     result.dataset.state = "error";
-                    result.textContent = translate("Error: %s", [
-                        error.message,
-                    ]);
+                    result.textContent = translate("Error: {message}", { message: error.message });
                 }
                 return false;
             } finally {

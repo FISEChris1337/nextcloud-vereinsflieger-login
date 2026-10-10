@@ -13,7 +13,7 @@ app = root / 'vereinsflieger_login'
 catalog = json.loads((app / 'l10n/de.json').read_text(encoding='utf-8'))
 translations = catalog['translations']
 plural = catalog['pluralForm']
-placeholders = lambda text: re.findall(r'%(?:\d+\$)?[sd]', text)
+placeholders = lambda text: re.findall(r'%(?:\d+\$)?[sd]|\{[A-Za-z][A-Za-z0-9_]*\}', text)
 for key, value in translations.items():
     if sorted(placeholders(key)) != sorted(placeholders(value)):
         raise RuntimeError(f'Placeholder mismatch: {key}')
