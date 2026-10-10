@@ -80,17 +80,13 @@
     "No roles received yet. Log in with a linked account while group synchronization is disabled. Received roles then become available.": "No roles received yet. Log in with a linked account while group synchronization is disabled. Received roles then become available.",
     "The admin group is excluded. Existing local memberships are preserved; only memberships added by this app can be removed. Changes apply at the next VF login.": "The admin group is excluded. Existing local memberships are preserved; only memberships added by this app can be removed. Changes apply at the next VF login.",
     "Roles are saved per club after successful login. Mappings use only these exact names. A saved role grants no membership unless it is returned again at that user’s login.": "Roles are saved per club after successful login. Mappings use only these exact names. A saved role grants no membership unless it is returned again at that user’s login.",
-    "Last verified roles": "Last verified roles",
     "No roles received yet. A successful Vereinsflieger login supplies the first snapshot.": "No roles received yet. A successful Vereinsflieger login supplies the first snapshot.",
     "Maintenance & updates": "Maintenance & updates",
     "App version": "App version",
     "Development version": "Development version",
     "Local login": "Local login",
-    "Available for local accounts with ?direct=1": "Available for local accounts with ?direct=1",
     "Remember me": "Remember me",
-    "Nextcloud cookie according to server settings": "Nextcloud cookie according to server settings",
     "Source code": "Source code",
-    "Separate Git repository with release packages": "Separate Git repository with release packages",
     "Back up app configuration and database before updating. Test new Nextcloud major versions before use.": "Back up app configuration and database before updating. Test new Nextcloud major versions before use.",
     "Changes are applied when you save.": "Changes are applied when you save.",
     "Save settings": "Save settings",
@@ -190,7 +186,6 @@
     "Next": "Next",
     "No entries found.": "No entries found.",
     "Loading entries …": "Loading entries …",
-    "One latest role snapshot per account. A successful login replaces the previous snapshot.": "One latest role snapshot per account. A successful login replaces the previous snapshot.",
     "Missing target groups: {groups}": "Missing target groups: {groups}",
     "Page {page} · {count} entries": "Page {page} · {count} entries",
     "Remaining: {time}": "Remaining: {time}",
@@ -198,7 +193,11 @@
     "{group} (target group missing)": "{group} (target group missing)",
     "OK: {message}": "OK: {message}",
     "Error: {message}": "Error: {message}",
-    "Search account or role": "Search account or role"
+    "Received Vereinsflieger roles": "Received Vereinsflieger roles",
+    "Search role": "Search role",
+    "All role names received for this club, each shown once. New roles are added after successful sign-ins and become available for group mapping.": "All role names received for this club, each shown once. New roles are added after successful sign-ins and become available for group mapping.",
+    "Disabled by server settings": "Disabled by server settings",
+    "Cookie lifetime: %s d · %s h · %s min · %s s": "Cookie lifetime: %s d · %s h · %s min · %s s"
   },
   "pluralForm": "nplurals=2; plural=(n != 1);"
 }

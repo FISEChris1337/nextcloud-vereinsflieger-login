@@ -40,14 +40,22 @@ const { chromium } = require("playwright");
         const checkText = await page.locator("#vf-check-result").textContent();
         check(/^(?:OK|Error|Fehler): .+/.test(checkText) && !/%s|\{message\}/.test(checkText), "native local configuration check displays its complete result");
         check(state.settings.snapshots.length === 0 && state.settings.provisionedLinks.length === 0, "initial page does not embed every record");
-        for (const kind of ["identities", "snapshots", "warnings", "pauses"]) {
+        for (const kind of ["identities", "roles", "warnings", "pauses"]) {
             const response = await context.request.post(listUrl, { data: { kind, page: 1 }, headers: { requesttoken: token } });
             const data = await response.json();
             check(response.status() === 200 && Array.isArray(data.items) && data.items.length <= 25, "admin endpoint pages " + kind);
         }
-        const noToken = await context.request.post(listUrl, { data: { kind: "snapshots" }, maxRedirects: 0 });
+        const roleResult = await context.request.post(listUrl, { data: { kind: "roles", page: 1 }, headers: { requesttoken: token } });
+        const roleItems = (await roleResult.json()).items;
+        check(roleItems.every((item) => Object.keys(item).length === 1 && typeof item.name === "string") && new Set(roleItems.map((item) => item.name)).size === roleItems.length, "native received-role catalog contains unique names without account or timestamp");
+        check(await page.locator("#vf-received-roles strong, #vf-received-roles time, #vf-received-roles input[type=checkbox]").count() === 0, "native role panel is a read-only list of names");
+        check((await page.locator("#vf-source-url").getAttribute("href")) === "https://github.com/FISEChris1337/nextcloud-vereinsflieger-login", "native source link points directly to GitHub");
+        const localUrl = await page.locator("#vf-local-login-url").getAttribute("href");
+        check(localUrl.startsWith(fixture.url) && new URL(localUrl).searchParams.get("direct") === "1" && (await page.locator("#vf-local-login-url").textContent()) === localUrl, "native local login displays its absolute escape URL");
+        check(Number(await page.locator("#vf-remember-lifetime").getAttribute("data-seconds")) === fixture.rememberLifetime && !(await page.locator("#vf-remember-lifetime").textContent()).includes("%s"), "native cookie lifetime matches actual server configuration");
+        const noToken = await context.request.post(listUrl, { data: { kind: "roles" }, maxRedirects: 0 });
         check([403, 412].includes(noToken.status()), "list endpoint requires CSRF");
-        const invalid = await context.request.post(listUrl, { data: { kind: "snapshots", page: -1 }, headers: { requesttoken: token } });
+        const invalid = await context.request.post(listUrl, { data: { kind: "roles", page: -1 }, headers: { requesttoken: token } });
         check(invalid.status() === 400, "list endpoint validates pagination");
         const guest = await browser.newContext();
         const anonymous = await guest.request.post(listUrl, { data: { kind: "identities" }, maxRedirects: 0 });
@@ -59,9 +67,9 @@ const { chromium } = require("playwright");
         const denied = await member.request.post(listUrl, { data: { kind: "identities" }, headers: { requesttoken: memberToken }, maxRedirects: 0 });
         check([403, 412].includes(denied.status()), "list endpoint rejects non-admins with valid CSRF");
         await page.locator('input[name="cid"]').fill("999999");
-        await page.locator("#vf-snapshots input[type=search]").fill("nonexistent-account");
-        await page.locator("#vf-snapshots input[type=search]").press("Enter");
-        await page.waitForFunction(() => document.querySelector("#vf-snapshots .vf-list-viewport").getAttribute("aria-busy") === "false");
+        await page.locator("#vf-received-roles input[type=search]").fill("nonexistent-role");
+        await page.locator("#vf-received-roles input[type=search]").press("Enter");
+        await page.waitForFunction(() => document.querySelector("#vf-received-roles .vf-list-viewport").getAttribute("aria-busy") === "false");
         check((await page.locator('input[name="cid"]').inputValue()) === "999999", "native search preserves unsaved settings");
         await page.setViewportSize({ width: 390, height: 844 });
         check(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), "native mobile admin has no horizontal overflow");

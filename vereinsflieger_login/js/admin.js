@@ -30,7 +30,7 @@
             filter.type = "search";
             filter.maxLength = 128;
             filter.placeholder = kind === "pauses" ? translate("Search login name or IP")
-                : kind === "snapshots" ? translate("Search account or role") : translate("Search account");
+                : kind === "roles" ? translate("Search role") : translate("Search account");
             filter.setAttribute("aria-label", filter.placeholder);
             // List filtering must not mark configuration as changed or submit its form.
             filter.addEventListener("input", (event) => event.stopPropagation());
@@ -44,7 +44,7 @@
             rows.setAttribute("role", "region");
             rows.setAttribute("aria-label", {
                 identities: translate("Automatically saved identities"),
-                snapshots: translate("Last verified roles"),
+                roles: translate("Received Vereinsflieger roles"),
                 warnings: translate("Group synchronization warnings"),
                 pauses: translate("Active login pauses"),
             }[kind]);
@@ -90,6 +90,9 @@
                     } else if (kind === "identities") {
                         row.className = "vf-identity-row";
                         row.textContent = "VF " + item.vfUid + " → " + item.uid + (item.blocked ? " · " + translate("blocked") : "");
+                    } else if (kind === "roles") {
+                        row.className = "vf-role-row";
+                        row.textContent = item.name;
                     } else {
                         row.className = "vf-snapshot";
                         const name = document.createElement("strong"), time = document.createElement("time");
@@ -97,15 +100,8 @@
                         time.dateTime = item.capturedAt;
                         time.textContent = displayTime(item.capturedAt);
                         const names = document.createElement("div");
-                        if (kind === "warnings") {
-                            row.classList.add("vf-mapping-warning");
-                            names.textContent = translate("Missing target groups: {groups}", { groups: item.names.join(", ") });
-                        } else item.names.forEach((role) => {
-                            const chip = document.createElement("span");
-                            chip.className = "vf-role-chip";
-                            chip.textContent = role;
-                            names.append(chip);
-                        });
+                        row.classList.add("vf-mapping-warning");
+                        names.textContent = translate("Missing target groups: {groups}", { groups: item.names.join(", ") });
                         row.append(name, time, names);
                     }
                     rows.append(row);

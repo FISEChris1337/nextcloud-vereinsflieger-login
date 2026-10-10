@@ -14,7 +14,7 @@ namespace {
     $_ = ['settings' => ['enabled' => false, 'cid' => '', 'hasKey' => false, 'syncRoles' => false,
         'links' => [], 'roleMap' => [], 'snapshots' => [], 'syncWarnings' => [], 'knownRoles' => ['Mitglied', 'Technisches Personal'], 'dailyApiBudget' => 400,
         'defaultLogin' => false, 'createAccounts' => false, 'excludedAccounts' => [], 'provisionedLinks' => [], 'showLocalLoginLink' => true, 'linkExistingByEmail' => false, 'rememberMeDefault' => true] + \OCA\VereinsfliegerLogin\Service\LoginProtection::DEFAULTS, 'groups' => ['Mitglieder', 'Technik', 'Startschreiber'], 'missingGroups' => [],
-        'accounts' => ['admin' => 'Lokaler Administrator', 'alice' => 'Alice Beispiel'], 'localLoginUrl' => '/login?direct=1',
+        'accounts' => ['admin' => 'Lokaler Administrator', 'alice' => 'Alice Beispiel'], 'localLoginUrl' => '/login?direct=1', 'rememberLifetime' => 1296000,
         'usage' => ['dateUtc' => '2026-10-07', 'used' => 28, 'providerPaused' => false, 'hourUtc' => '2026-10-07 12:00', 'hourUsed' => 8, 'providerPauseRemaining' => 0],
         'listUrl' => '/demo/list', 'pauses' => [], 'pauseUrl' => '/demo/unpause', 'saveUrl' => '/demo/save', 'checkUrl' => '/demo/check'];
     echo '<!doctype html><html lang="de"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Vereinsflieger – Adminvorschau</title><style>';

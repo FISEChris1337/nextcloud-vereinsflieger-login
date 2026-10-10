@@ -2,7 +2,7 @@
 
 ## 0.6.8 (unreleased)
 
-Find confirmed role snapshots by account ID or role name, including partial and case-insensitive Unicode matches. Paginate matching accounts and preserve bounded database reads.
+Display the club’s received role catalog once per exact role name, with role search and bounded pagination. Replace the per-account role snapshot panel. Link directly to the source repository and local login, and display the configured Nextcloud remember-cookie lifetime.
 
 ## 0.6.7
 

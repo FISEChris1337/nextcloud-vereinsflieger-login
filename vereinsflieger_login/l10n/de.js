@@ -81,17 +81,13 @@ OC.L10N.register(
     "No roles received yet. Log in with a linked account while group synchronization is disabled. Received roles then become available.": "Noch keine Rollen empfangen. Zuerst ein verknüpftes Konto anmelden, während die Gruppensynchronisation ausgeschaltet bleibt. Danach stehen die empfangenen Rollen zur Auswahl.",
     "The admin group is excluded. Existing local memberships are preserved; only memberships added by this app can be removed. Changes apply at the next VF login.": "Die Gruppe admin ist ausgeschlossen. Bestehende lokale Gruppen bleiben erhalten; entfernt werden nur Mitgliedschaften, die diese App selbst hinzugefügt hat. Änderungen greifen beim nächsten Vereinsflieger-Login.",
     "Roles are saved per club after successful login. Mappings use only these exact names. A saved role grants no membership unless it is returned again at that user’s login.": "Rollen werden nach erfolgreicher Anmeldung je Verein gespeichert. Neue Zuordnungen sind ausschließlich aus dieser Auswahl möglich. Eine bekannte Rolle allein gewährt keine Mitgliedschaft: Dafür muss sie beim jeweiligen Login erneut zurückkommen.",
-    "Last verified roles": "Zuletzt bestätigte Rollen",
     "No roles received yet. A successful Vereinsflieger login supplies the first snapshot.": "Noch keine Rollen empfangen. Ein erfolgreicher Vereinsflieger-Login liefert den ersten Stand.",
     "Maintenance & updates": "Wartung & Updates",
     "App version": "App-Version",
     "Development version": "Testversion",
     "Local login": "Lokaler Login",
-    "Available for local accounts with ?direct=1": "Mit ?direct=1 für lokale Konten erreichbar",
     "Remember me": "Angemeldet bleiben",
-    "Nextcloud cookie according to server settings": "Nextcloud-Cookie gemäß Servereinstellung",
     "Source code": "Quellcode",
-    "Separate Git repository with release packages": "Separates Git-Repository mit Release-Paketen",
     "Back up app configuration and database before updating. Test new Nextcloud major versions before use.": "Vor einem Update App-Konfiguration und Datenbank sichern. Neue Nextcloud-Hauptversionen werden nach einem Kompatibilitätstest freigegeben.",
     "Changes are applied when you save.": "Änderungen werden mit „Speichern“ übernommen.",
     "Save settings": "Einstellungen speichern",
@@ -191,7 +187,6 @@ OC.L10N.register(
     "Next": "Weiter",
     "No entries found.": "Keine Einträge gefunden.",
     "Loading entries …": "Einträge werden geladen …",
-    "One latest role snapshot per account. A successful login replaces the previous snapshot.": "Pro Konto wird nur der letzte bestätigte Rollenstand gespeichert. Eine erfolgreiche Anmeldung ersetzt den vorherigen Stand.",
     "Missing target groups: {groups}": "Fehlende Zielgruppen: {groups}",
     "Page {page} · {count} entries": "Seite {page} · {count} Einträge",
     "Remaining: {time}": "Restzeit: {time}",
@@ -199,7 +194,11 @@ OC.L10N.register(
     "{group} (target group missing)": "{group} (Zielgruppe fehlt)",
     "OK: {message}": "OK: {message}",
     "Error: {message}": "Fehler: {message}",
-    "Search account or role": "Konto oder Rolle suchen"
+    "Received Vereinsflieger roles": "Empfangene Vereinsflieger-Rollen",
+    "Search role": "Rolle suchen",
+    "All role names received for this club, each shown once. New roles are added after successful sign-ins and become available for group mapping.": "Alle für diesen Verein empfangenen Rollennamen, jeweils nur einmal. Neue Rollen werden nach erfolgreichen Anmeldungen ergänzt und stehen für die Gruppenzuordnung bereit.",
+    "Disabled by server settings": "Durch Servereinstellungen deaktiviert",
+    "Cookie lifetime: %s d · %s h · %s min · %s s": "Cookie-Laufzeit: %s T · %s Std · %s Min · %s Sek"
 },
     "nplurals=2; plural=(n != 1);"
 );

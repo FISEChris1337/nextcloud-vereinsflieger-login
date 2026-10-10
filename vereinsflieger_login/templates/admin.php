@@ -99,12 +99,27 @@ declare(strict_types=1);
             <?php if ($_['settings']['knownRoles'] === []) { ?><p class="vf-empty"><?php p($l->t('No roles received yet. Log in with a linked account while group synchronization is disabled. Received roles then become available.')); ?></p><?php } ?>
             <p class="vf-hint"><?php p($l->t('The admin group is excluded. Existing local memberships are preserved; only memberships added by this app can be removed. Changes apply at the next VF login.')); ?></p>
             <p class="vf-hint"><?php p($l->t('Roles are saved per club after successful login. Mappings use only these exact names. A saved role grants no membership unless it is returned again at that user’s login.')); ?></p>
-            <h4 id="vf-snapshots-heading"><?php p($l->t('Last verified roles')); ?></h4>
-            <p class="vf-hint"><?php p($l->t("One latest role snapshot per account. A successful login replaces the previous snapshot.")); ?></p>
-            <div id="vf-snapshots" data-vf-list="snapshots" aria-labelledby="vf-snapshots-heading"></div>
+            <h4 id="vf-received-roles-heading"><?php p($l->t('Received Vereinsflieger roles')); ?></h4>
+            <p class="vf-hint"><?php p($l->t('All role names received for this club, each shown once. New roles are added after successful sign-ins and become available for group mapping.')); ?></p>
+            <div id="vf-received-roles" data-vf-list="roles" aria-labelledby="vf-received-roles-heading"></div>
         </section>
         <section class="vf-card" id="vf-maintenance">
-            <h3><?php p($l->t('Maintenance & updates')); ?></h3><dl class="vf-facts"><dt><?php p($l->t('App version')); ?></dt><dd>0.6.8</dd><dt>Nextcloud</dt><dd>33–35 · PHP ≥ 8.3</dd><dt><?php p($l->t('Local login')); ?></dt><dd><?php p($l->t('Available for local accounts with ?direct=1')); ?></dd><dt><?php p($l->t('Remember me')); ?></dt><dd><?php p($l->t('Nextcloud cookie according to server settings')); ?></dd><dt><?php p($l->t('Source code')); ?></dt><dd><?php p($l->t('Separate Git repository with release packages')); ?></dd></dl>
+            <h3><?php p($l->t('Maintenance & updates')); ?></h3>
+            <dl class="vf-facts">
+                <dt><?php p($l->t('App version')); ?></dt><dd>0.6.8</dd>
+                <dt>Nextcloud</dt><dd>33–35 · PHP ≥ 8.3</dd>
+                <dt><?php p($l->t('Local login')); ?></dt><dd><a id="vf-local-login-url" href="<?php p($_['localLoginUrl']); ?>"><?php p($_['localLoginUrl']); ?></a></dd>
+                <dt><?php p($l->t('Remember me')); ?></dt>
+                <dd id="vf-remember-lifetime" data-seconds="<?php p($_['rememberLifetime']); ?>"><?php
+                    if ($_['rememberLifetime'] === 0) {
+                        p($l->t('Disabled by server settings'));
+                    } else {
+                        $seconds = $_['rememberLifetime'];
+                        p($l->t('Cookie lifetime: %s d · %s h · %s min · %s s', [(string)intdiv($seconds, 86400), (string)intdiv($seconds % 86400, 3600), (string)intdiv($seconds % 3600, 60), (string)($seconds % 60)]));
+                    }
+?></dd>
+                <dt><?php p($l->t('Source code')); ?></dt><dd><a id="vf-source-url" href="https://github.com/FISEChris1337/nextcloud-vereinsflieger-login" target="_blank" rel="noopener noreferrer">GitHub</a></dd>
+            </dl>
             <p><?php p($l->t('Back up app configuration and database before updating. Test new Nextcloud major versions before use.')); ?></p>
         </section>
         <footer class="vf-actions"><p id="vf-message" role="status" aria-live="polite"><?php p($l->t('Changes are applied when you save.')); ?></p><button type="submit" class="primary"><?php p($l->t('Save settings')); ?></button></footer>

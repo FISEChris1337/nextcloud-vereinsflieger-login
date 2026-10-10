@@ -185,7 +185,7 @@ const assert = require("node:assert/strict");
             "save sends configured protection limits",
         );
         check(
-            (await page.locator('a[href="/login?direct=1"]').count()) === 1,
+            (await page.locator('a[href="/login?direct=1"]').count()) === 2,
             "local escape URL visible in admin UI",
         );
         await page.evaluate(() => {

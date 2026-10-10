@@ -138,14 +138,7 @@
     font-size: 12px;
     color: var(--color-text-maxcontrast);
 }
-.vf-role-chip {
-    display: inline-block;
-    background: var(--color-background-dark);
-    padding: 4px 10px;
-    border-radius: 20px;
-    margin: 10px 6px 0 0;
-    font-size: 12px;
-}
+.vf-facts dd { min-width: 0; overflow-wrap: anywhere; }
 .vf-empty {
     padding: 18px;
     background: var(--color-background-dark);
@@ -304,7 +297,8 @@
     text-align: center;
     font-size: 12px;
 }
-.vf-identity-row { padding: 8px 0; }
+.vf-identity-row,
+.vf-role-row { padding: 8px 0; }
 .vf-snapshot strong,
 .vf-snapshot time { display: inline-block; overflow-wrap: anywhere; }
 #vf-links:empty,

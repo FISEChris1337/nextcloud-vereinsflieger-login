@@ -11,12 +11,12 @@ namespace OCA\VereinsfliegerLogin\Settings;
 use OCA\VereinsfliegerLogin\Service\Configuration;
 use OCA\VereinsfliegerLogin\Service\RequestGuard;
 use OCP\AppFramework\Http\TemplateResponse;
-use OCP\{IGroupManager, IURLGenerator, IUserManager};
+use OCP\{IConfig, IGroupManager, IURLGenerator, IUserManager};
 use OCP\Settings\ISettings;
 
 final class Admin implements ISettings
 {
-    public function __construct(private Configuration $settings, private IURLGenerator $urls, private IGroupManager $groups, private RequestGuard $guard, private IUserManager $users)
+    public function __construct(private Configuration $settings, private IURLGenerator $urls, private IGroupManager $groups, private RequestGuard $guard, private IUserManager $users, private IConfig $config)
     {
     }
     public function getForm(): TemplateResponse
@@ -47,7 +47,8 @@ final class Admin implements ISettings
         }
         ksort($accounts);
         return new TemplateResponse('vereinsflieger_login', 'admin', ['settings' => $settings, 'groups' => $groups, 'missingGroups' => $missingGroups, 'usage' => $usage, 'accounts' => $accounts,
-            'localLoginUrl' => $this->urls->linkToRoute('core.login.showLoginForm', ['direct' => '1']),
+            'localLoginUrl' => $this->urls->getAbsoluteURL($this->urls->linkToRoute('core.login.showLoginForm', ['direct' => '1'])),
+            'rememberLifetime' => max(0, (int)$this->config->getSystemValue('remember_login_cookie_lifetime', 60 * 60 * 24 * 15)),
             'saveUrl' => $this->urls->linkToRoute('vereinsflieger_login.admin.save'), 'checkUrl' => $this->urls->linkToRoute('vereinsflieger_login.admin.check'),
             'listUrl' => $this->urls->linkToRoute('vereinsflieger_login.admin.listPage'),
             'pauseUrl' => $this->urls->linkToRoute('vereinsflieger_login.admin.unpause')]);

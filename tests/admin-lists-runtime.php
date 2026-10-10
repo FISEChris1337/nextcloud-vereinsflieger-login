@@ -18,6 +18,7 @@ $config = \OCP\Server::get(\OCP\IConfig::class);
 $settings = new Configuration($config, \OCP\Server::get(\OCP\Security\ICrypto::class), \OCP\Server::get(\OCP\IUserManager::class), \OCP\Server::get(\OCP\IGroupManager::class), new KnownRoles($db), new AccountLinks($db));
 $store = new CounterStore($db);
 $lists = new AdminLists($db, $settings, new RequestGuard($store, $config, \OCP\Server::get(\OCP\AppFramework\Utility\ITimeFactory::class)));
+$catalog = new KnownRoles($db);
 $cid = $settings->read()['cid'];
 if ($cid === '') {
     throw new RuntimeException('Use an already configured development instance.');
@@ -39,6 +40,9 @@ try {
         // Decimal API UID; no real user object, jobs or files are created.
         $vf = (string)(980000000000000 + $i);
         $id = hash('sha256', json_encode([$cid, $vf], JSON_THROW_ON_ERROR));
+        $role = $prefix . '_Rolle_' . sprintf('%03d', $i);
+        $catalog->remember($cid, [$role, $role]);
+        $catalog->remember($cid, [$role]);
         $db->executeStatement('INSERT INTO *PREFIX*vf_account_links (identifier, cid, vfuid, ncuid, blocked, createdat) VALUES (?, ?, ?, ?, ?, ?)', [$id, $cid, $vf, $uid, 0, $now]);
         foreach (['snapshot' => ['roles' => ['Mitglied', '<unsafe>']], 'group_sync_warning' => ['groups' => ['missing-group']]] as $key => $names) {
             $value = ['cid' => $cid, 'vfUid' => $vf, 'capturedAt' => gmdate('c', $now)] + $names;
@@ -48,7 +52,7 @@ try {
         $store->consume($pause, 1, 1, $now, $now + 900);
         $store->rememberPause($pause, $scope, $uid, '2001:db8::' . dechex($i + 1), 'failures', [$pause], $now + 900);
     }
-    foreach (['identities', 'snapshots', 'warnings'] as $kind) {
+    foreach (['identities', 'warnings'] as $kind) {
         $first = $lists->page($kind, 1, $prefix);
         $second = $lists->page($kind, 2, $prefix);
         $third = $lists->page($kind, 3, $prefix);
@@ -60,6 +64,21 @@ try {
         $check(count($lists->page($kind, 1, $prefix . '_000')['items']) === 1, $kind . ': literal underscore search');
         $check($lists->page($kind, 1, $prefix . "%'")['items'] === [], $kind . ': wildcard and quote cannot broaden search');
     }
+    $firstRoles = $lists->page('roles', 1, $prefix);
+    $secondRoles = $lists->page('roles', 2, $prefix);
+    $lastRoles = $lists->page('roles', 3, $prefix);
+    $allRoles = [...$firstRoles['items'], ...$secondRoles['items'], ...$lastRoles['items']];
+    $check(count($firstRoles['items']) === 25 && $firstRoles['hasMore'] && count($secondRoles['items']) === 25 && $secondRoles['hasMore'] && count($lastRoles['items']) === 11 && !$lastRoles['hasMore'], 'role catalog is SQL-paged');
+    $check(count(array_unique(array_column($allRoles, 'name'))) === 61, 'repeated role imports appear only once');
+    $check(array_keys($allRoles[0]) === ['name'], 'roles contain no account or login timestamp');
+    $check(count($lists->page('roles', 1, strtoupper($prefix) . '_rOLLE_000')['items']) === 1, 'role-name search ignores case');
+    $check($lists->page('roles', 1, $prefix . "%'")['items'] === [], 'role search handles wildcard and quote literally');
+    $extraRole = $prefix . '_Ärztin & 50%_';
+    $catalog->remember($cid, [$extraRole]);
+    $check($lists->page('roles', 1, 'ärztin & 50%_')['items'] === [['name' => $extraRole]], 'Unicode and special-character role search');
+    $otherCid = $cid === '1234567890' ? '1234567891' : '1234567890';
+    $catalog->remember($otherCid, [$prefix . '_OtherClub']);
+    $check($lists->page('roles', 1, $prefix . '_OtherClub')['items'] === [], 'role list is isolated by club');
     $first = $store->pausePage($scope, $now, 1, $prefix);
     $last = $store->pausePage($scope, $now, 3, $prefix);
     $check(count($first['items']) === 25 && $first['hasMore'] && count($last['items']) === 11 && !$last['hasMore'], 'pauses are database-paged');
@@ -70,7 +89,7 @@ try {
     $check(count($store->pausePage($scope, $now, 3, $prefix)['items']) === 10, 'unlock remains functional and updates last page');
     $public = $settings->publicData(false);
     $check($public['snapshots'] === [] && $public['syncWarnings'] === [] && $public['provisionedLinks'] === [], 'admin initial payload omits full lists');
-    foreach ([['invalid', 1, ''], ['identities', 0, ''], ['snapshots', 100001, ''], ['warnings', 1, str_repeat('x', 129)], ['snapshots', 1, "\xFF"]] as $args) {
+    foreach ([['invalid', 1, ''], ['identities', 0, ''], ['roles', 100001, ''], ['warnings', 1, str_repeat('x', 129)], ['roles', 1, "\xFF"]] as $args) {
         try {
             $lists->page(...$args);
             throw new RuntimeException('Invalid page accepted');
