@@ -31,9 +31,9 @@ const { chromium } = require("playwright");
         check(statuses.length === 4 && statuses.every((text) => /(?:Page|Seite) 1 · \d+ (?:entries|Einträge)/.test(text)), "native pagination displays resolved page and row counts");
         const interpolation = await page.evaluate(() => {
             const params = { page: "2", count: "25", groups: "Pilot & <Crew>", role: "Pilot & <Crew>", group: "Pilot & <Crew>", time: "14:59", message: "Test & <message>" };
-            return ["Page {page} · {count} entries", "Missing target groups: {groups}", "Remaining: {time}", "{role} (previous mapping, not verified yet)", "{group} (target group missing)", "OK: {message}", "Error: {message}"].map((text) => OC.L10N.translate("vereinsflieger_login", text, params, undefined, { escape: false }));
+            return ["Page {page} · {count} entries", "Missing target groups: {groups}", "Remaining: {time}", "{role} (previous mapping, not verified yet)", "{group} (target group missing)", "OK: {message}", "Error: {message}"].map((text) => OC.L10N.translate("vereinsflieger_login", text, params, undefined, { escape: false, sanitize: false }));
         });
-        check(interpolation.every((text) => !/%s|\{(?:page|count|groups|role|group|time|message)\}/.test(text)) && interpolation[0].includes("2 · 25") && interpolation[1].includes("Pilot & <Crew>") && interpolation[2].includes("14:59") && interpolation[5] === "OK: Test & <message>", "native translation parameters resolve without double escaping");
+        check(interpolation.every((text) => !/%s|\{(?:page|count|groups|role|group|time|message)\}/.test(text)) && interpolation[0].includes("2 · 25") && interpolation[1].includes("Pilot & <Crew>") && interpolation[2].includes("14:59") && interpolation[5] === "OK: Test & <message>", "native translation parameters resolve without double escaping: " + JSON.stringify(interpolation));
         check(interpolation[0] === (fixture.language === "de" ? "Seite 2 · 25 Einträge" : "Page 2 · 25 entries"), "native translation uses the account language");
         await page.locator("#vf-check").click();
         await page.waitForFunction(() => ["success", "error"].includes(document.querySelector("#vf-check-result").dataset.state));

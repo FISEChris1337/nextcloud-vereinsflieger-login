@@ -3,7 +3,7 @@
     "use strict";
     const translate = (text, parameters = {}) =>
         // Every translated value is assigned through textContent or a plain-text attribute.
-        OC.L10N.translate("vereinsflieger_login", text, parameters, undefined, { escape: false });
+        OC.L10N.translate("vereinsflieger_login", text, parameters, undefined, { escape: false, sanitize: false });
     const init = () => {
         const root = document.getElementById("vf-admin");
         if (!root) return;
