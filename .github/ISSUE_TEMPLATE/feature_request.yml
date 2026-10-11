@@ -1,0 +1,34 @@
+name: Feature request
+description: Suggest a feature or improvement for Vereinsflieger Login.
+title: "[Feature]: "
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Describe the improvement and how it would help your club. Please check the existing issues first.
+  - type: textarea
+    id: problem
+    attributes:
+      label: What would this help you do?
+      description: Describe the problem or workflow you want to improve.
+      placeholder: "As a club administrator, I would like to ..."
+    validations:
+      required: true
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: Proposed improvement
+      description: Explain the behavior or option you would like to see.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives or workarounds
+      description: How do you handle this today? Have you considered other approaches?
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Add examples or screenshots if useful. Remove credentials and personal member details.
