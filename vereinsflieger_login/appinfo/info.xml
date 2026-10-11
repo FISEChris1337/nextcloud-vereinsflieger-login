@@ -33,7 +33,7 @@ Unabhängige Community-Integration. Kein offizielles Vereinsflieger-Produkt.</de
   <author>Vereinsflieger Login contributors</author>
   <namespace>VereinsfliegerLogin</namespace>
   <category>security</category>
-  <bugs>https://github.com/FISEChris1337/nextcloud-vereinsflieger-login/issues</bugs>
+  <bugs>https://github.com/FISEChris1337/nextcloud-vereinsflieger-login/issues/new/choose</bugs>
   <repository type="git">https://github.com/FISEChris1337/nextcloud-vereinsflieger-login</repository>
   <screenshot>https://raw.githubusercontent.com/FISEChris1337/nextcloud-vereinsflieger-login/v0.6.8/docs/screenshots/login-de.png</screenshot>
   <dependencies><php min-version="8.3"/><nextcloud min-version="33" max-version="35"/></dependencies>
