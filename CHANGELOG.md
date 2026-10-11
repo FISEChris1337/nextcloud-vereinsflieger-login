@@ -1,8 +1,11 @@
 # Changelog
 
-## 0.6.8 (unreleased)
+## 0.6.8
 
-Display the club’s received role catalog once per exact role name, with role search and bounded pagination. Replace the per-account role snapshot panel. Link directly to the source repository and local login, and display the configured Nextcloud remember-cookie lifetime.
+- Display the club's received role catalog once per exact role name, with role search and bounded pagination. Replace the per-account role snapshot panel.
+- Link directly to the source repository and local login, and display the configured Nextcloud remember-cookie lifetime with a documentation link.
+- Improve German and English App Store descriptions and include login, role mapping and account migration screenshots.
+- Link App Store feedback to the bug-report and feature-request forms, and provide direct administration documentation.
 
 ## 0.6.7
 
