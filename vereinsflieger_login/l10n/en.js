@@ -198,7 +198,8 @@ OC.L10N.register(
     "Search role": "Search role",
     "All role names received for this club, each shown once. New roles are added after successful sign-ins and become available for group mapping.": "All role names received for this club, each shown once. New roles are added after successful sign-ins and become available for group mapping.",
     "Disabled by server settings": "Disabled by server settings",
-    "Cookie lifetime: %s d · %s h · %s min · %s s": "Cookie lifetime: %s d · %s h · %s min · %s s"
+    "Cookie lifetime: %s d · %s h · %s min · %s s": "Cookie lifetime: %s d · %s h · %s min · %s s",
+    "Documentation": "Documentation"
 },
     "nplurals=2; plural=(n != 1);"
 );

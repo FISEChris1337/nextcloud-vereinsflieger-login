@@ -117,7 +117,7 @@ declare(strict_types=1);
                         $seconds = $_['rememberLifetime'];
                         p($l->t('Cookie lifetime: %s d · %s h · %s min · %s s', [(string)intdiv($seconds, 86400), (string)intdiv($seconds % 86400, 3600), (string)intdiv($seconds % 3600, 60), (string)($seconds % 60)]));
                     }
-?></dd>
+?> · <a id="vf-cookie-docs" href="https://docs.nextcloud.com/server/stable/admin_manual/gdpr/cookies.html#remember-me-cookies" target="_blank" rel="noopener noreferrer"><?php p($l->t('Documentation')); ?></a></dd>
                 <dt><?php p($l->t('Source code')); ?></dt><dd><a id="vf-source-url" href="https://github.com/FISEChris1337/nextcloud-vereinsflieger-login" target="_blank" rel="noopener noreferrer">GitHub</a></dd>
             </dl>
             <p><?php p($l->t('Back up app configuration and database before updating. Test new Nextcloud major versions before use.')); ?></p>

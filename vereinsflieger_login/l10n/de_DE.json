@@ -197,7 +197,8 @@
     "Search role": "Rolle suchen",
     "All role names received for this club, each shown once. New roles are added after successful sign-ins and become available for group mapping.": "Alle für diesen Verein empfangenen Rollennamen, jeweils nur einmal. Neue Rollen werden nach erfolgreichen Anmeldungen ergänzt und stehen für die Gruppenzuordnung bereit.",
     "Disabled by server settings": "Durch Servereinstellungen deaktiviert",
-    "Cookie lifetime: %s d · %s h · %s min · %s s": "Cookie-Laufzeit: %s T · %s Std · %s Min · %s Sek"
+    "Cookie lifetime: %s d · %s h · %s min · %s s": "Cookie-Laufzeit: %s T · %s Std · %s Min · %s Sek",
+    "Documentation": "Dokumentation"
   },
   "pluralForm": "nplurals=2; plural=(n != 1);"
 }
