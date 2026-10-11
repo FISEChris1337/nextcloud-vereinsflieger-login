@@ -15,3 +15,5 @@ Independent community app. **Not an official Vereinsflieger product.**
 Requires Nextcloud 33–35, PHP 8.3 or later and HTTPS for Vereinsflieger login.
 
 [Installation](docs/INSTALLATION.md) · [Configuration](docs/CONFIGURATION.md) · [License](LICENSE) · [Third-party notices](vereinsflieger_login/THIRD_PARTY_NOTICES.md)
+
+[Feature requests](https://github.com/FISEChris1337/nextcloud-vereinsflieger-login/issues/new?template=feature_request.yml) · [Bug reports](https://github.com/FISEChris1337/nextcloud-vereinsflieger-login/issues/new?template=bug_report.yml)

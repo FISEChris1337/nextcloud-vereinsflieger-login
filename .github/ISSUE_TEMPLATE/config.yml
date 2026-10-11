@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Configuration guide
+    url: https://github.com/FISEChris1337/nextcloud-vereinsflieger-login/blob/main/docs/CONFIGURATION.md
+    about: Check account linking, role mapping, session behavior and login protection settings.
